@@ -25,6 +25,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -52,4 +56,6 @@ dependencies {
     })
 
     testImplementation 'junit:junit:4.12'
+
+    implementation project(':javaJokesLibrary')
 }
