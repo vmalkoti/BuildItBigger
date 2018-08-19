@@ -1,0 +1,3 @@
+backend/src/main/webapp/* linguist-vendored
+*.java linguist-vendored=false
+*.xml linguist-vendored=false
