@@ -1,8 +1,11 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -16,6 +19,19 @@ import com.example.jokeactivitylibrary.JokeActivity;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String joke = intent.getStringExtra(Intent.EXTRA_TEXT);
+
+            Intent activityIntent = new Intent(context, JokeActivity.class);
+            activityIntent.putExtra(Intent.EXTRA_TEXT, joke);
+            activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(activityIntent);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +63,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(broadcastReceiver,
+                        new IntentFilter(EndpointsAsyncTask.ACTION_JOKE_BROADCAST));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(broadcastReceiver);
+    }
+
     public void tellJoke(View view) {
         /*
         JavaJokes jokes = new JavaJokes();
@@ -63,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         */
 
         new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manuel"));
-
     }
 
 

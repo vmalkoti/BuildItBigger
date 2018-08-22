@@ -4,7 +4,9 @@ package com.udacity.gradle.builditbigger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.jokeactivitylibrary.JokeActivity;
@@ -17,6 +19,8 @@ import com.udacity.gradle.builditbigger.backend.jokesApi.JokesApi;
 import java.io.IOException;
 
 class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+    private static final String LOG_TAG = "DEBUG_" + EndpointsAsyncTask.class.getSimpleName();
+    public static final String ACTION_JOKE_BROADCAST = "ACTION_JOKE_BROADCAST";
     private static JokesApi jokesApiService = null;
     private Context context;
 
@@ -51,9 +55,20 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
     protected void onPostExecute(String result) {
         //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
 
+        /*
+        // Start activity with result string
         Intent intent = new Intent(context, JokeActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, result);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+        */
+
+        // send a local broadcast
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
+        Intent broadcastIntent = new Intent(ACTION_JOKE_BROADCAST);
+        broadcastIntent.putExtra(Intent.EXTRA_TEXT, result);
+        manager.sendBroadcast(broadcastIntent);
+
+        Log.d(LOG_TAG, "Broadcast sent");
     }
 }
