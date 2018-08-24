@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/*
 import com.example.javajokeslibrary.JavaJokes;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
+*/
 
 /**
  * A placeholder fragment containing a simple view.
