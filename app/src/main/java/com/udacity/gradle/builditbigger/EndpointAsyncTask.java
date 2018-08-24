@@ -43,7 +43,8 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
         String name = pairs[0].second;
 
         try {
-            return jokesApiService.sayHi(name).execute().getData();
+            return jokesApiService.getJoke().execute().getJoke();
+            //return jokesApiService.sayHi(name).execute().getData();
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -53,16 +54,6 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
 
     @Override
     protected void onPostExecute(String result) {
-        //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-
-        /*
-        // Start activity with result string
-        Intent intent = new Intent(context, JokeActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, result);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        */
-
         // send a local broadcast
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
         Intent broadcastIntent = new Intent(ACTION_JOKE_BROADCAST);

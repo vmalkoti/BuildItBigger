@@ -30,4 +30,11 @@ public class MyEndpoint {
         return response;
     }
 
+    @ApiMethod(name = "getJoke")
+    public JokeBean getJoke(){
+        JokeBean response = new JokeBean();
+        JavaJokes jokes = new JavaJokes();
+        response.setJoke(jokes.getRandomJoke());
+        return response;
+    }
 }

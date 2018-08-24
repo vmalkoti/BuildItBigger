@@ -35,6 +35,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // added per instructions in
+    // https://developer.android.com/studio/build/build-variants?utm_source=android-studio#product-flavors
+    flavorDimensions "version"
+    productFlavors {
+        free {
+            dimension "version"
+            applicationIdSuffix ".free"
+        }
+        paid {
+            dimension "version"
+            applicationIdSuffix ".paid"
+        }
+    }
 }
 
 dependencies {
@@ -56,6 +70,10 @@ dependencies {
     })
 
     testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+
 
     implementation project(':javaJokesLibrary')
     implementation project(':jokeActivityLibrary')
