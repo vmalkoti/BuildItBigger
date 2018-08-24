@@ -25,10 +25,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String joke = intent.getStringExtra(Intent.EXTRA_TEXT);
 
-            Intent activityIntent = new Intent(context, JokeActivity.class);
-            activityIntent.putExtra(Intent.EXTRA_TEXT, joke);
-            activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(activityIntent);
+            context.startActivity(MainActivity.getJokeActivityLaunchIntent(context, joke));
         }
     };
 
@@ -82,5 +79,12 @@ public class MainActivity extends AppCompatActivity {
         new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manuel"));
     }
 
+
+    public static Intent getJokeActivityLaunchIntent(Context context, String joke) {
+        Intent activityIntent = new Intent(context, JokeActivity.class);
+        activityIntent.putExtra(Intent.EXTRA_TEXT, joke);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return  activityIntent;
+    }
 
 }
