@@ -23,10 +23,9 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     private static final String LOG_TAG = "DEBUG_" + EndpointsAsyncTask.class.getSimpleName();
     public static final String ACTION_JOKE_BROADCAST = "ACTION_JOKE_BROADCAST";
     private static JokesApi jokesApiService = null;
-    //private Context context;
     private WeakReference<Context> contextRef;
 
-    public EndpointsAsyncTask(Context context) {
+    EndpointsAsyncTask(Context context) {
         contextRef = new WeakReference<>(context);
     }
 
@@ -45,18 +44,12 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
             jokesApiService = builder.build();
         }
 
-        //context = pairs[0].first;
-        //String name = pairs[0].second;
-
         try {
             return jokesApiService.getJoke().execute().getJoke();
-            //return jokesApiService.sayHi(name).execute().getData();
         } catch (IOException e) {
             Log.d(LOG_TAG, e.getMessage());
             return null;
         }
-
-        //return null;
     }
 
     @Override
@@ -64,7 +57,7 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
         Context context = contextRef.get();
 
         if(context != null) {
-            // send a local broadcast
+            // send a local broadcast if activity context is still valid
             LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
             Intent broadcastIntent = new Intent(ACTION_JOKE_BROADCAST);
             broadcastIntent.putExtra(Intent.EXTRA_TEXT, result);
