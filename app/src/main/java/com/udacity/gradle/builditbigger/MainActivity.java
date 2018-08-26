@@ -6,15 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.javajokeslibrary.JavaJokes;
 import com.example.jokeactivitylibrary.JokeActivity;
 
 
@@ -25,7 +22,11 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String joke = intent.getStringExtra(Intent.EXTRA_TEXT);
 
-            context.startActivity(MainActivity.getJokeActivityLaunchIntent(context, joke));
+            if(joke !=null) {
+                context.startActivity(MainActivity.getJokeActivityLaunchIntent(context, joke));
+            } else {
+                Toast.makeText(MainActivity.this, "Could not retrieve joke", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manuel"));
+        new EndpointsAsyncTask(this).execute();
     }
 
 

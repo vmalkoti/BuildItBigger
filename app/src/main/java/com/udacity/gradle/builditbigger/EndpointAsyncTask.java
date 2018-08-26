@@ -17,15 +17,21 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.udacity.gradle.builditbigger.backend.jokesApi.JokesApi;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
-class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     private static final String LOG_TAG = "DEBUG_" + EndpointsAsyncTask.class.getSimpleName();
     public static final String ACTION_JOKE_BROADCAST = "ACTION_JOKE_BROADCAST";
     private static JokesApi jokesApiService = null;
-    private Context context;
+    //private Context context;
+    private WeakReference<Context> contextRef;
+
+    public EndpointsAsyncTask(Context context) {
+        contextRef = new WeakReference<>(context);
+    }
 
     @Override
-    protected String doInBackground(Pair<Context, String>... pairs) {
+    protected String doInBackground(Void[] voids) {
         if(jokesApiService == null) {
             JokesApi.Builder builder = new JokesApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -39,8 +45,8 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
             jokesApiService = builder.build();
         }
 
-        context = pairs[0].first;
-        String name = pairs[0].second;
+        //context = pairs[0].first;
+        //String name = pairs[0].second;
 
         try {
             return jokesApiService.getJoke().execute().getJoke();
@@ -55,12 +61,14 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
 
     @Override
     protected void onPostExecute(String result) {
-        // send a local broadcast
-        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
-        Intent broadcastIntent = new Intent(ACTION_JOKE_BROADCAST);
-        broadcastIntent.putExtra(Intent.EXTRA_TEXT, result);
-        manager.sendBroadcast(broadcastIntent);
+        Context context = contextRef.get();
 
-        Log.d(LOG_TAG, "Broadcast sent");
+        if(context != null) {
+            // send a local broadcast
+            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
+            Intent broadcastIntent = new Intent(ACTION_JOKE_BROADCAST);
+            broadcastIntent.putExtra(Intent.EXTRA_TEXT, result);
+            manager.sendBroadcast(broadcastIntent);
+        }
     }
 }
